@@ -1,6 +1,7 @@
 import supertest from "supertest";
 import { config } from "dotenv";
 import app from "../src/app";
+import db from "../src/database/db";
 config();
 
 const request = supertest(app);
