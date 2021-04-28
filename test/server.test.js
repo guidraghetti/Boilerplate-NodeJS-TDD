@@ -7,9 +7,7 @@ config();
 const request = supertest(app);
 
 describe("Test Connections", () => {
-  it("Should connect on PORT 3001", () => {
-    expect(process.env.PORT).toEqual("3001");
-  });
+  it.todo("Should connect on PORT 3001");
   it.todo("Should connect to database");
   it.todo("Should disconnect database when api is off");
 });
