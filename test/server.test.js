@@ -24,6 +24,9 @@ describe("Test Connections", () => {
   });
   it.todo("Should disconnect database when api is off");
   it.todo("Should render Swagger");
+  afterAll(() => {
+    db.connection.close();
+  });
 });
 
 describe("User registration", () => {
