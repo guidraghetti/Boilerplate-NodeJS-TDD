@@ -1,7 +1,7 @@
 import supertest from "supertest";
 import { config } from "dotenv";
 import app from "../src/app";
-import db from "../src/database/db";
+import { db, dbConfig } from "../src/database/db";
 config();
 
 const request = supertest(app);
@@ -12,7 +12,16 @@ describe("Test Connections", () => {
       expect(res.statusCode).toEqual(200);
     });
   });
-  it.todo("Should connect to database");
+  test("Should connect to database", (done) => {
+    db.connect(process.env.MONGO_URI_TEST, dbConfig, (error, result) => {
+      if (error) {
+        done(error);
+        return;
+      }
+      expect(result.connections[0].name).toEqual(process.env.DB_NAME_TEST);
+      done();
+    });
+  });
   it.todo("Should disconnect database when api is off");
   it.todo("Should render Swagger");
 });

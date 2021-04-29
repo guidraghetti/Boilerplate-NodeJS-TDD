@@ -1,4 +1,5 @@
 import express from "express";
+import db from "./database/db";
 const app = express();
 
 app.use(express.urlencoded({ extended: false }));
