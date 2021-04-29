@@ -7,9 +7,14 @@ config();
 const request = supertest(app);
 
 describe("Test Connections", () => {
-  it.todo("Should connect on PORT 3001");
+  test("Should connect on PORT 3001", () => {
+    return request.get("/").then((res) => {
+      expect(res.statusCode).toEqual(200);
+    });
+  });
   it.todo("Should connect to database");
   it.todo("Should disconnect database when api is off");
+  it.todo("Should render Swagger");
 });
 
 describe("User registration", () => {
