@@ -22,11 +22,17 @@ describe("Test Connections", () => {
       done();
     });
   });
-  it.todo("Should disconnect database when api is off");
-  it.todo("Should render Swagger");
-  afterAll(() => {
-    db.connection.close();
+  test("Should disconnect database", (done) => {
+    db.connection.close(false, (error, result) => {
+      if (error) {
+        done(error);
+        return;
+      }
+      expect(result).toBeUndefined();
+      done();
+    });
   });
+  it.todo("Should render Swagger");
 });
 
 describe("User registration", () => {
