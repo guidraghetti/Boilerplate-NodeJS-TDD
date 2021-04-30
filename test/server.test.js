@@ -32,7 +32,17 @@ describe("Test Connections", () => {
       done();
     });
   });
-  it.todo("Should render Swagger");
+  test("Should render Swagger", () => {
+    return request
+      .get("/swagger")
+      .then((res) => {
+        console.log(res);
+        expect(res.statusCode).toEqual(301);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  });
 });
 
 describe("User registration", () => {
