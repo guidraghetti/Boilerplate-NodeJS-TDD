@@ -5,6 +5,11 @@ import { db, dbConfig } from "../src/database/db";
 config();
 
 const request = supertest(app);
+const testUser = {
+  name: "Guilherme",
+  email: `guidraghetti${Date.now()}@gmail.com`,
+  password: "dragui@123",
+};
 
 describe("Test Connections", () => {
   test("Should connect on PORT 3001", () => {
@@ -45,11 +50,6 @@ describe("Test Connections", () => {
 });
 
 describe("User registration", () => {
-  const testUser = {
-    name: "Guilherme",
-    email: `guidraghetti${Date.now()}@gmail.com`,
-    password: "dragui@123",
-  };
   const emptyUser = {
     name: " ",
     email: " ",
@@ -120,6 +120,19 @@ describe("User login", () => {
       .then((res) => {
         expect(res.statusCode).toEqual(401);
         expect(res.body.error).toEqual("E-mail inválido!");
+      });
+  });
+  test("Cannot login if user password is incorrect", () => {
+    const userLogin = {
+      email: testUser.email,
+      password: "jdfkdlfjdslfkdsjflds",
+    };
+    return request
+      .post("/auth/login")
+      .send(userLogin)
+      .then((res) => {
+        expect(res.statusCode).toEqual(401);
+        expect(res.body.error).toEqual("Senha inválida!");
       });
   });
   it.todo("Login should return a JWT token");

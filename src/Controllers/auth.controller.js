@@ -16,7 +16,7 @@ userController.login = async (req, res) => {
       return res.status(401).json({ error: "E-mail inválido!" });
     }
     if (!bcrypt.compareSync(password, user.password)) {
-      return res.status(401).json({ error: "Senha inválida" });
+      return res.status(401).json({ error: "Senha inválida!" });
     }
     const jwt = getJWT({ id: user._id, name: user.name, email: user.email });
     return res.json({
@@ -47,7 +47,6 @@ userController.create = async (req, res) => {
       });
     }
     const newUser = await userService.save(name, email, password);
-    console.log(newUser);
     const jwt = generateJWT({
       id: newUser._id,
       name: newUser.name,
