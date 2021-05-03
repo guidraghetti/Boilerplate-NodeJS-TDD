@@ -50,6 +50,11 @@ describe("User registration", () => {
     email: `guidraghetti${Date.now()}@gmail.com`,
     password: "dragui@123",
   };
+  const emptyUser = {
+    name: " ",
+    email: " ",
+    password: " ",
+  };
   beforeAll(async () => {
     await db.connect(process.env.MONGO_URI_TEST, dbConfig);
   });
@@ -64,8 +69,15 @@ describe("User registration", () => {
         expect(res.body.name).toEqual(testUser.name);
       });
   });
-  it.todo("Register cannot be empty");
-  it.todo("Password cannot be empty");
+  test("Register fields cannot be empty", () => {
+    return request
+      .post("/user")
+      .send(emptyUser)
+      .then((res) => {
+        expect(res.statusCode).toEqual(400);
+        expect(res.body.error).toEqual("Você deve preencher todos os campos!");
+      });
+  });
   it.todo("Email cannot be registered more than once ");
   afterAll(async () => {
     await db.connection.close(false);
