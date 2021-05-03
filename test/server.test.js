@@ -36,7 +36,6 @@ describe("Test Connections", () => {
     return request
       .get("/swagger")
       .then((res) => {
-        console.log(res);
         expect(res.statusCode).toEqual(301);
       })
       .catch((err) => {
@@ -46,9 +45,31 @@ describe("Test Connections", () => {
 });
 
 describe("User registration", () => {
-  it.todo("Registration fields cannot be empty");
+  const testUser = {
+    name: "Guilherme",
+    email: `guidraghetti${Date.now()}@gmail.com`,
+    password: "dragui@123",
+  };
+  beforeAll(async () => {
+    await db.connect(process.env.MONGO_URI_TEST, dbConfig);
+  });
+
+  test("Should register an user", () => {
+    return request
+      .post("/user")
+      .send(testUser)
+      .then((res) => {
+        expect(res.statusCode).toEqual(201);
+        expect(res.body.email).toEqual(testUser.email);
+        expect(res.body.name).toEqual(testUser.name);
+      });
+  });
+  it.todo("Register cannot be empty");
   it.todo("Password cannot be empty");
   it.todo("Email cannot be registered more than once ");
+  afterAll(async () => {
+    await db.connection.close(false);
+  });
 });
 
 describe("User login", () => {
