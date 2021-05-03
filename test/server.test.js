@@ -61,41 +61,71 @@ describe("User registration", () => {
 
   test("Should register an user", () => {
     return request
-      .post("/user")
+      .post("/auth/register")
       .send(testUser)
       .then((res) => {
         expect(res.statusCode).toEqual(201);
-        expect(res.body.email).toEqual(testUser.email);
-        expect(res.body.name).toEqual(testUser.name);
+        expect(res.body.user.email).toEqual(testUser.email);
+        expect(res.body.user.name).toEqual(testUser.name);
       });
   });
   test("Register fields cannot be empty", () => {
     return request
-      .post("/user")
+      .post("/auth/register")
       .send(emptyUser)
       .then((res) => {
         expect(res.statusCode).toEqual(400);
-        expect(res.body.error).toEqual("Você deve preencher todos os campos!");
+        expect(res.body.error).toEqual(
+          "Todos os campos devem estar preenchidos!"
+        );
       });
   });
   test("Email cannot be registered more than once", () => {
     return request
-      .post("/user")
+      .post("/auth/register")
       .send(testUser)
       .then((res) => {
         expect(res.statusCode).toEqual(400);
-        expect(res.body.error).toEqual("E-mail já está cadastrado!");
+        expect(res.body.error).toEqual("E-mail já cadastrado!");
       });
-  });
-  afterAll(async () => {
-    await db.connection.close(false);
   });
 });
 
 describe("User login", () => {
-  it.todo("Email cannot be empty");
-  it.todo("Password cannot be empty");
-  it.todo("User cannot login with random data");
+  const userLogin = {
+    email: "guidraghetti@gmail.com",
+    password: "draghetti@123",
+  };
+  const emptyUserLogin = {
+    email: " ",
+    password: " ",
+  };
+  test("Login fields cannot be empty", () => {
+    return request
+      .post("/auth/login")
+      .send({ email: emptyUserLogin.email, password: userLogin.password })
+      .then((res) => {
+        expect(res.statusCode).toEqual(400);
+        expect(res.body.error).toEqual("E-mail/senha inválidos!");
+      });
+  });
+  test("Cannot login if user email hasn't in database", () => {
+    const userLogin = {
+      email: "joaofjdljkfdjl@gmail.com",
+      password: "jlfksdfjldskfjds",
+    };
+    return request
+      .post("/auth/login")
+      .send(userLogin)
+      .then((res) => {
+        expect(res.statusCode).toEqual(401);
+        expect(res.body.error).toEqual("E-mail inválido!");
+      });
+  });
   it.todo("Login should return a JWT token");
   it.todo("Should verify if the token is valid");
+});
+afterAll(async () => {
+  await db.connection.db.dropDatabase();
+  await db.connection.close(false);
 });

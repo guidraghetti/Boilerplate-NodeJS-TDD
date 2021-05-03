@@ -22,4 +22,4 @@ const UserSchema = new Schema({
 });
 const User = db.model("user", UserSchema);
 
-export default User;
+export { User };
