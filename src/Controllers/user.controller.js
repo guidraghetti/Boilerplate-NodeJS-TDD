@@ -10,7 +10,10 @@ userController.create = async (user) => {
     validator.isEmail(user.email) ||
     user.password !== " "
   ) {
-    return await userService.save(user);
+    const haveUser = await userService.findUser(user.email);
+    if (haveUser.status)
+      return { status: false, error: "E-mail já está cadastrado!" };
+    else return await userService.save(user);
   } else {
     return { status: false, error: "Você deve preencher todos os campos!" };
   }

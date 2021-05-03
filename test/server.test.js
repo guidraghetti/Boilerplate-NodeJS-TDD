@@ -78,7 +78,15 @@ describe("User registration", () => {
         expect(res.body.error).toEqual("Você deve preencher todos os campos!");
       });
   });
-  it.todo("Email cannot be registered more than once ");
+  test("Email cannot be registered more than once", () => {
+    return request
+      .post("/user")
+      .send(testUser)
+      .then((res) => {
+        expect(res.statusCode).toEqual(400);
+        expect(res.body.error).toEqual("E-mail já está cadastrado!");
+      });
+  });
   afterAll(async () => {
     await db.connection.close(false);
   });

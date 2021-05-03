@@ -13,8 +13,20 @@ userService.save = async (user) => {
     };
     return { status: true, data: fetchCreated };
   } catch (error) {
-    console.log(error);
-    return { status: false, error };
+    throw error;
+  }
+};
+
+userService.findUser = async (email) => {
+  try {
+    const user = await User.findOne({ email });
+    if (user !== null) {
+      return { status: true, user };
+    } else {
+      return { status: false, error: "Usuário não encontrado!" };
+    }
+  } catch (error) {
+    throw error;
   }
 };
 
