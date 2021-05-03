@@ -135,9 +135,20 @@ describe("User login", () => {
         expect(res.body.error).toEqual("Senha inválida!");
       });
   });
-  it.todo("Login should return a JWT token");
+  test("Login should return a JWT token", () => {
+    return request
+      .post("/auth/login")
+      .send({ email: testUser.email, password: testUser.password })
+      .then((res) => {
+        expect(res.statusCode).toEqual(200);
+        expect(res.body.user.email).toEqual(testUser.email);
+        expect(res.body.user.name).toEqual(testUser.name);
+        expect(res.body.user.token).toBeDefined();
+      });
+  });
   it.todo("Should verify if the token is valid");
 });
+
 afterAll(async () => {
   await db.connection.db.dropDatabase();
   await db.connection.close(false);
