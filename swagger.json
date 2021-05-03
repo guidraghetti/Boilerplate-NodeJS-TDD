@@ -56,15 +56,16 @@
     },
     "/user": {
       "post": {
+        "tags":["Register"]
 
       },
       "get": {
-
+        "tags":["Register"]
       }
     },
     "getAll": {
       "get": {
-        
+        "tags":["Register"]
       }
     }
   }
