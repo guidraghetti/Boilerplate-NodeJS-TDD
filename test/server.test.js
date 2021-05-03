@@ -146,7 +146,6 @@ describe("User login", () => {
         expect(res.body.user.token).toBeDefined();
       });
   });
-  it.todo("Should verify if the token is valid");
 });
 
 afterAll(async () => {
