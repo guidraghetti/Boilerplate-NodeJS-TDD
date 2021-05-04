@@ -9,7 +9,7 @@ userController.getById = async (req, res) => {
     return res.json(user);
   } catch (error) {
     console.log(error);
-    return res.status(500).json({ error: "An internal error ocurred!" });
+    return res.status(400).json({ error: "Invalid Id!" });
   }
 };
 

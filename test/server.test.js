@@ -175,6 +175,16 @@ describe("Test protected routes", () => {
         expect(res.body[0]).toHaveProperty("email");
       });
   });
+
+  test("Shouldn't return all users with false token", () => {
+    return request
+      .get("/user/getAll")
+      .set("authorization", "Bearer " + token + "fjdfldskfjdslkfjdslkds")
+      .then((res) => {
+        expect(res.statusCode).toEqual(401);
+        expect(res.body.error).toEqual("Unauthorized!");
+      });
+  });
   test("Shoud return specific user with token", () => {
     return request
       .get(`/user/${userId}`)
@@ -184,6 +194,15 @@ describe("Test protected routes", () => {
         expect(res.body).toHaveProperty("_id");
         expect(res.body).toHaveProperty("name");
         expect(res.body).toHaveProperty("email");
+      });
+  });
+  test("Shoud return error with invalid id", () => {
+    return request
+      .get(`/user/${userId}dkfdjlfdjsfdlfsd`)
+      .set("authorization", "Bearer " + token)
+      .then((res) => {
+        expect(res.statusCode).toEqual(400);
+        expect(res.body.error).toEqual("Invalid Id!");
       });
   });
   afterAll(async () => {
