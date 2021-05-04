@@ -10,6 +10,8 @@ const testUser = {
   email: `guidraghetti${Date.now()}@gmail.com`,
   password: "dragui@123",
 };
+let token;
+let userId;
 
 describe("Test Connections", () => {
   test("Should connect on PORT 3001", () => {
@@ -135,20 +137,57 @@ describe("User login", () => {
         expect(res.body.error).toEqual("Senha inválida!");
       });
   });
-  test("Login should return a JWT token", () => {
-    return request
+  test("Login should return a JWT token", async () => {
+    const res = await request
       .post("/auth/login")
-      .send({ email: testUser.email, password: testUser.password })
-      .then((res) => {
-        expect(res.statusCode).toEqual(200);
-        expect(res.body.user.email).toEqual(testUser.email);
-        expect(res.body.user.name).toEqual(testUser.name);
-        expect(res.body.user.token).toBeDefined();
-      });
+      .send({ email: testUser.email, password: testUser.password });
+    expect(res.statusCode).toEqual(200);
+    expect(res.body.user.email).toEqual(testUser.email);
+    expect(res.body.user.name).toEqual(testUser.name);
+    expect(res.body.user.token).toBeDefined();
+    token = res.body.user.token;
+    userId = res.body.user._id;
   });
 });
 
-afterAll(async () => {
-  await db.connection.db.dropDatabase();
-  await db.connection.close(false);
+describe("Test protected routes", () => {
+  test("Shouldn't return all users without token", () => {
+    return request.get("/user/getAll").then((res) => {
+      expect(res.statusCode).toEqual(401);
+      expect(res.body.error).toEqual("Unauthorized!");
+    });
+  });
+  test("Shouldn't return specific user (passing id) without token", () => {
+    return request.get(`/user/${userId}`).then((res) => {
+      expect(res.statusCode).toEqual(401);
+      expect(res.body.error).toEqual("Unauthorized!");
+    });
+  });
+
+  test("Should return all users with token", () => {
+    return request
+      .get("/user/getAll")
+      .set("authorization", "Bearer " + token)
+      .then((res) => {
+        expect(res.statusCode).toEqual(200);
+        expect(res.body[0]).toHaveProperty("_id");
+        expect(res.body[0]).toHaveProperty("name");
+        expect(res.body[0]).toHaveProperty("email");
+      });
+  });
+  test("Shoud return specific user with token", () => {
+    return request
+      .get(`/user/${userId}`)
+      .set("authorization", "Bearer " + token)
+      .then((res) => {
+        expect(res.statusCode).toEqual(200);
+        expect(res.body).toHaveProperty("_id");
+        expect(res.body).toHaveProperty("name");
+        expect(res.body).toHaveProperty("email");
+      });
+  });
+  afterAll(async () => {
+    await db.connection.db.dropDatabase();
+    await db.connection.close(false);
+  });
 });

@@ -5,20 +5,23 @@ import userService from "../Services/user.service.js";
 const auth = (req, res, next) => {
   const { authorization } = req.headers;
   if (!authorization || authorization === "") {
-    res.status(400).send();
-    return next();
+    return res.status(401).json({ error: "Unauthorized!" });
   }
-  jwt.verify(authorization, CONFIG.jwt.secret, async (err, decoded) => {
-    if (err) {
-      return res.status(401).send();
+  jwt.verify(
+    authorization.split(" ")[1],
+    CONFIG.jwt.secret,
+    async (err, decoded) => {
+      if (err) {
+        return res.status(401).json({ error: "Unauthorized!" });
+      }
+      const loggedUser = await userService.findById(decoded.id);
+      if (!loggedUser) {
+        return res.status(401).json({ error: "Unauthorized!" });
+      }
+      req.user = loggedUser;
+      return next();
     }
-    const loggedUser = await userService.findById(decoded.id);
-    if (!loggedUser) {
-      return res.status(401).send();
-    }
-    req.user = loggedUser;
-    return next();
-  });
+  );
   return true;
 };
 

@@ -7,6 +7,7 @@ const userController = {};
 
 userController.login = async (req, res) => {
   const { email, password } = req.body;
+
   try {
     if (!validator.isEmail(email) || !password) {
       return res.status(400).json({ error: "E-mail/senha inválidos!" });
@@ -25,6 +26,7 @@ userController.login = async (req, res) => {
     });
     return res.json({
       user: {
+        _id: user._id,
         name: user.name,
         email: user.email,
         token: jwt,
