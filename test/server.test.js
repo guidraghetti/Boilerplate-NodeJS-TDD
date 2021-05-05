@@ -205,6 +205,18 @@ describe("Test protected routes", () => {
         expect(res.body.error).toEqual("Invalid Id!");
       });
   });
+
+  describe("All tests about books", () => {
+    it.todo("Should return all books owned by some user");
+    it.todo("Should return all books that some user like to buy");
+    it.todo("Should return error user if user id is incorrect");
+    it.todo("Should return all books by genre");
+    it.todo("Should return error if genre doesn't exist");
+    it.todo("Should return the number of books by genre");
+    it.todo("Should user add a book that he own to his profile");
+    it.todo("Should user add a book that he like to buy to his profile");
+  });
+
   afterAll(async () => {
     await db.connection.db.dropDatabase();
     await db.connection.close(false);
