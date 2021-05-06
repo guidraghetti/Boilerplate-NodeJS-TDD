@@ -214,7 +214,7 @@ describe("All tests about books", () => {
     };
 
     return request
-      .post(`/book/post`)
+      .post("/book")
       .send(book)
       .set("authorization", "Bearer " + token)
       .then((res) => {
@@ -232,7 +232,7 @@ describe("All tests about books", () => {
       year: 2003,
     };
     return request
-      .post("/book/post")
+      .post("/book")
       .send(book1)
       .set("authorization", "Bearer " + token)
       .then((res) => {

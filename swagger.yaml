@@ -1,0 +1,429 @@
+swagger: "2.0"
+info:
+  description: "This is an API Swagger to get infos"
+  version: "1.0.0"
+  title: "Swagger BOOK API"
+  license:
+    name: "Apache 2.0"
+    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+host: "localhost:3001"
+basePath: "/"
+tags:
+- name: "User"
+  description: "User methods"
+- name: "Book"
+  description: "Operations about books"
+schemes:
+- "https"
+- "http"
+
+securityDefinitions:
+  bearerAuth:
+    type: apiKey
+    name: Authorization
+    description: "Put your JWT token to get access"
+    in: header
+paths:
+  /auth/login:
+    post:
+      tags:
+      - "User"
+      summary: "Log in the API"
+      description: "Log in to get access to API functions"
+      operationId: "loginUser"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "User object need to be added"
+        required: true
+        schema:
+          $ref: "#/definitions/Login"
+      responses:
+        "400":
+          description: "Bad Request"
+          schema:
+            type: "object"
+            properties:
+              error:
+                type: "string"
+                
+        "401":
+          description: "Unauthorized"
+          schema:
+            type: "object"
+            properties:
+              error:
+                type: "string"
+                
+        "200":
+          description: "Successful Operation"
+          schema:
+            $ref: "#/definitions/LoginResponse"
+  
+  /auth/register:
+    post:
+      tags:
+      - "User"
+      summary: "Register user on the application"
+      description: "Register user to get access to use API functions"
+      operationId: "registerUser"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Register user objct to be added on API"
+        required: true
+        schema:
+          $ref: "#/definitions/Register"
+      responses:
+        "200":
+          description: "Successful Operation"
+          schema:
+            $ref: "#/definitions/RegisterResponse"
+        "400":
+          description: "Bad Request"
+          schema:
+            type: "object"
+            properties:
+              error:
+                type: "string"
+                
+     
+  /user/getAll:
+    get:
+      tags:
+      - "User"
+      summary: "Get all users"
+      description: "Return all users that are registered on plataform"
+      operationId: "getAllUsers"
+      security:
+      - bearerAuth: [] 
+      produces:
+      - "application/json"
+      responses:
+        "200":
+          description: "Successful Operation"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/User"
+        "400":
+          description: "Bad Request"
+          schema:
+            type: "object"
+            properties:
+              error:
+                type: "string"
+                
+        "500":
+          description: "An internal error ocurred"
+          schema:
+            type: "object"
+            properties:
+              error:
+                type: "string"
+                
+  /user/{userId}:
+    get:
+      tags:
+      - "User"
+      summary: "Get users by id"
+      description: "Return specific user that are registered on plataform"
+      operationId: "getUserById"
+      security:
+      - bearerAuth: [] 
+      produces:
+      - "application/json"
+      parameters:
+      - name: userId
+        type: "string"
+        in: path
+        description: ID of user that will be returned
+        required: true
+      responses:
+        "200":
+          description: "Successful Operation"
+          schema:
+              $ref: "#/definitions/User"
+        "400":
+          description: "Bad Request"
+          schema:
+            type: "object"
+            properties:
+              error:
+                type: "string"
+                
+        "500":
+          description: "An internal error ocurred"
+          schema:
+            type: "object"
+            properties:
+              error:
+                type: "string"
+                
+  /book/genre/count:
+    get:
+      tags: 
+      - "Book"
+      summary: "Count of books"
+      description: "Return the number of books with the genre"
+      operationId: "getCountBooksByGenre"
+      security:
+      - bearerAuth: []
+      produces:
+      - "application/json"
+      parameters:
+      - name: genre
+        type: "string"
+        in: query
+        description: Genre that will pass to return the count
+        required: true
+      responses:
+        "200":
+          description: "Successful Operation"
+          schema:
+            type: "object"
+            properties:
+              count:
+                type: "integer"
+                description: "The number of books"
+        "400":
+          description: "Bad Request"
+          schema:
+            type: "object"
+            properties:
+              error:
+                type: "string"
+        "500":
+          description: "An internal error ocurred"
+          schema:
+            type: "object"
+            properties:
+              error:
+                type: "string"
+                
+      
+  /book/genre:
+    get:
+      tags:
+      - "Book"
+      summary: "Books by genre"
+      description: "Returns all books that are of this genre"
+      operationId: "getBooksByGenre"
+      security:
+      - bearerAuth: []
+      produces:
+      - "application/json"
+      parameters:
+      - name: genre
+        type: "string"
+        in: query
+        description: Genre that will pass to return the books
+        required: true
+      responses:
+        "200":
+          description: "Successful Operation"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Book"
+        "400":
+          description: "Bad Request"
+          schema:
+            type: "object"
+            properties:
+              error:
+                type: "string"
+        "500":
+          description: "An internal error ocurred"
+          schema:
+            type: "object"
+            properties:
+              error:
+                type: "string"
+                
+      
+  /book/getAll:
+    get:
+      tags:
+      - "Book"
+      summary: "Return all books"
+      description: "Returns all books that are on database"
+      operationId: "getAllBooks"
+      security:
+      - bearerAuth: []
+      produces:
+      - "application/json"
+      responses:
+        "200":
+          description: "Successful Operation"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Book"
+        "400":
+          description: "Bad Request"
+          schema:
+            type: "object"
+            properties:
+              error:
+                type: "string"
+        "500":
+          description: "An internal error ocurred"
+          schema:
+            type: "object"
+            properties:
+              error:
+                type: "string"
+  /book/user/{userId}:
+    get:
+      tags:
+      - "Book"
+      - "User"
+      summary: "Books by genre"
+      description: "Returns all books that are of this genre"
+      operationId: "getUserBooks"
+      security:
+      - bearerAuth: []
+      produces:
+      - "application/json"
+      parameters:
+      - name: userId
+        type: "string"
+        in: path
+        description: User Id that will pass to return the books of user
+        required: true
+      responses:
+        "200":
+          description: "Successful Operation"
+          schema:
+              $ref: "#/definitions/UserBooks"
+        "400":
+          description: "Bad Request"
+          schema:
+            type: "object"
+            properties:
+              error:
+                type: "string"
+        "500":
+          description: "An internal error ocurred"
+          schema:
+            type: "object"
+            properties:
+              error:
+                type: "string"
+  # /book
+  
+
+definitions:
+  Login:
+    type: "object"
+    properties:
+      email:
+        type: "string"
+        description: "Email to log in"
+      password:
+        type: "string"
+        description: "Password to log in"
+  Register:
+    type: "object"
+    properties:
+      name:
+        type: "string"
+        description: "Name of user"
+      email: 
+        type: "string"
+        description: "Email of user"
+      password:
+        type: "string"
+        description: "Password of user"
+  LoginResponse:
+    type: "object"
+    properties:
+      _id:
+        type: "string"
+        description: "id of user"
+      name:
+        type: "string"
+        description: "Name of user"
+      email:
+        type: "string"
+        description: "Email of user"
+      token:
+        type: "string"
+        description: "Token to be authenticated on API"
+  RegisterResponse:
+    type: "object"
+    properties:
+      name: 
+        type: "string"
+        description: "Name of user"
+      email:
+        type: "string"
+        description: "Email of user"
+      token:
+        type: "string"
+        description: "Token to be authenticated on API"
+  User:
+    type: "object"
+    properties:
+      name:
+        type: "string"
+        description: "Name of user"
+      email:
+        type: "string"
+        description: "Email of user"
+      books:
+        type: "array"
+        items:
+          type: "string"
+        description: "all books that user have or like to"
+      createdAt:
+        type: "string"
+        format: "date-time"
+        description: "Date of creation"
+  Book:
+    type: "object"
+    properties:
+      name:
+        type: "string"
+        description: "Name of book"
+      genre:
+        type: "string"
+        description: "Genre of book"
+      ISBN:
+        type: "string"
+        description: "ISBN of book"
+      type:
+        type: "string"
+        enum: ["own", "like"]
+        description: "If own the book or if he like to own"
+      year:
+        type: "string"
+        description: "Year of release"
+  UserBooks:
+    type: "object"
+    properties:
+      userId: 
+        type: "string"
+        description: "Id of user"
+      name:
+        type: "string"
+        description: "Name of user"
+      email:
+        type: "string"
+        description: "Email of user"
+      books:
+        type: "array"
+        items:
+          $ref: "#/definitions/Book"
+externalDocs:
+  description: "Find out more about Swagger"
+  url: "http://swagger.io"
