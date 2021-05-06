@@ -216,6 +216,7 @@ describe("All tests about books", () => {
       type: "own",
       year: 2001,
     };
+
     return request
       .post(`/book/post`)
       .send(book)
@@ -225,9 +226,26 @@ describe("All tests about books", () => {
         expect(res.body.books.length).toBeGreaterThan(0);
       });
   });
+  test("Should user add a book that he like to buy to his profile", () => {
+    const book1 = {
+      userId,
+      name: "Harry Potter Philosofal",
+      genre: "Fiction",
+      type: "like",
+      year: 2003,
+    };
+    return request
+      .post("/book/post")
+      .send(book1)
+      .set("authorization", "Bearer " + token)
+      .then((res) => {
+        expect(res.statusCode).toEqual(200);
+        expect(res.body.books.length).toBeGreaterThan(0);
+      });
+  });
   test("Should return all books owned by some user", () => {
     return request
-      .get(`/book/${userId}/own`)
+      .get(`/book/${userId}?type=own`)
       .set("authorization", "Bearer " + token)
       .then((res) => {
         expect(res.statusCode).toEqual(200);
@@ -240,22 +258,35 @@ describe("All tests about books", () => {
         });
       });
   });
+  test("Should return all books that some user like to buy", () => {
+    return request
+      .get(`/book/${userId}?type=like`)
+      .set("authorization", "Bearer " + token)
+      .then((res) => {
+        expect(res.statusCode).toEqual(200);
+        expect(res.body.userId).toEqual(userId);
+        res.body.books.forEach((book) => {
+          expect(book).toHaveProperty("name");
+          expect(book).toHaveProperty("year");
+          expect(book).toHaveProperty("genre");
+        });
+      });
+  });
   test("Should return error if user doesn't exist", () => {
     return request
-      .get(`/book/aaaaaaaaaaaaaaaaaaaaaaaa/own`)
+      .get(`/book/aaaaaaaaaaaaaaaaaaaaaaaa/?type=own`)
       .set("authorization", "Bearer " + token)
       .then((res) => {
         expect(res.statusCode).toEqual(400);
         expect(res.body.error).toEqual("User not found!");
       });
   });
-  it.todo("Should return all books that some user like to buy");
+
   it.todo("Should return error user if user id is incorrect");
   it.todo("Should return all books by genre");
   it.todo("Should return error if genre doesn't exist");
   it.todo("Should return the number of books by genre");
 
-  it.todo("Should user add a book that he like to buy to his profile");
   afterAll(async () => {
     await db.connection.db.dropDatabase();
     await db.connection.close(false);
