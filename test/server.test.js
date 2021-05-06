@@ -40,14 +40,9 @@ describe("Test Connections", () => {
     });
   });
   test("Should render Swagger", () => {
-    return request
-      .get("/swagger")
-      .then((res) => {
-        expect(res.statusCode).toEqual(301);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    return request.get("/swagger").then((res) => {
+      expect(res.statusCode).toEqual(301);
+    });
   });
 });
 
@@ -212,6 +207,7 @@ describe("All tests about books", () => {
     const book = {
       userId,
       name: "Harry Potter",
+      ISBN: "978-8532523051",
       genre: "Fiction",
       type: "own",
       year: 2001,
@@ -230,6 +226,7 @@ describe("All tests about books", () => {
     const book1 = {
       userId,
       name: "Harry Potter Philosofal",
+      ISBN: "978-8532523052",
       genre: "Fiction",
       type: "like",
       year: 2003,
@@ -243,9 +240,10 @@ describe("All tests about books", () => {
         expect(res.body.books.length).toBeGreaterThan(0);
       });
   });
+
   test("Should return all books owned by some user", () => {
     return request
-      .get(`/book/${userId}?type=own`)
+      .get(`/book/user/${userId}?type=own`)
       .set("authorization", "Bearer " + token)
       .then((res) => {
         expect(res.statusCode).toEqual(200);
@@ -253,14 +251,16 @@ describe("All tests about books", () => {
         res.body.books.forEach((book) => {
           expect(book).toHaveProperty("name");
           expect(book).toHaveProperty("year");
+          expect(book).toHaveProperty("type");
           expect(book).toHaveProperty("genre");
+          expect(book).toHaveProperty("ISBN");
           // expect(book).toHaveProperty("cover");
         });
       });
   });
   test("Should return all books that some user like to buy", () => {
     return request
-      .get(`/book/${userId}?type=like`)
+      .get(`/book/user/${userId}?type=like`)
       .set("authorization", "Bearer " + token)
       .then((res) => {
         expect(res.statusCode).toEqual(200);
@@ -268,13 +268,15 @@ describe("All tests about books", () => {
         res.body.books.forEach((book) => {
           expect(book).toHaveProperty("name");
           expect(book).toHaveProperty("year");
+          expect(book).toHaveProperty("type");
           expect(book).toHaveProperty("genre");
+          expect(book).toHaveProperty("ISBN");
         });
       });
   });
-  test("Should return error if user doesn't exist", () => {
+  test("Should return error user if user id is incorrect", () => {
     return request
-      .get(`/book/aaaaaaaaaaaaaaaaaaaaaaaa/?type=own`)
+      .get(`/book/user/aaaaaaaaaaaaaaaaaaaaaaaa?type=own`)
       .set("authorization", "Bearer " + token)
       .then((res) => {
         expect(res.statusCode).toEqual(400);
@@ -282,8 +284,39 @@ describe("All tests about books", () => {
       });
   });
 
-  it.todo("Should return error user if user id is incorrect");
-  it.todo("Should return all books by genre");
+  test("Should return all books", () => {
+    return request
+      .get("/book/getAll")
+      .set("authorization", "Bearer " + token)
+      .then((res) => {
+        expect(res.statusCode).toEqual(200);
+        res.body.forEach((book) => {
+          expect(book).toHaveProperty("name");
+          expect(book).toHaveProperty("year");
+          expect(book).toHaveProperty("type");
+          expect(book).toHaveProperty("genre");
+          expect(book).toHaveProperty("ISBN");
+        });
+      });
+  });
+
+  test("Should return all books by genre", () => {
+    return request
+      .get(`/book/genre?=Fiction`)
+      .set("authorization", "Bearer " + token)
+      .then((res) => {
+        expect(res.statusCode).toEqual(200);
+        res.body.forEach((book) => {
+          expect(book).toHaveProperty("name");
+          expect(book).toHaveProperty("year");
+          expect(book).toHaveProperty("type");
+          expect(book).toHaveProperty("genre");
+          expect(book.genre).toEqual("Fiction");
+          expect(book).toHaveProperty("ISBN");
+        });
+      });
+  });
+  
   it.todo("Should return error if genre doesn't exist");
   it.todo("Should return the number of books by genre");
 

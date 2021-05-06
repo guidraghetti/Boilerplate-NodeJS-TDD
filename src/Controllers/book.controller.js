@@ -3,6 +3,27 @@ import bookService from "../Services/book.service.js";
 
 const bookController = {};
 
+bookController.getAllBooks = async (req, res) => {
+  try {
+    const books = await bookService.findAllBooks();
+    return res.json(books);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ error: "An internal error ocurred!" });
+  }
+};
+
+bookController.getBooksByGenre = async (req, res) => {
+  const { genre } = req.query;
+  try {
+    const books = await bookService.findBookByGenre(genre);
+    res.json(books);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ error: "An internal error ocurred!" });
+  }
+};
+
 bookController.getUserOwnedBooks = async (req, res) => {
   const { id } = req.params;
   const { type } = req.query;

@@ -10,6 +10,10 @@ const bookSchema = new Schema({
     type: String,
     required: true,
   },
+  ISBN: {
+    type: String,
+    required: true,
+  },
   type: {
     type: String,
     enum: ["own", "like"],
