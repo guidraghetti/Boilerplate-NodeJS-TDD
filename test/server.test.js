@@ -302,7 +302,8 @@ describe("All tests about books", () => {
 
   test("Should return all books by genre", () => {
     return request
-      .get(`/book/genre?=Fiction`)
+      .get(`/book/genre`)
+      .query({ genre: "Fiction" })
       .set("authorization", "Bearer " + token)
       .then((res) => {
         expect(res.statusCode).toEqual(200);
@@ -316,8 +317,18 @@ describe("All tests about books", () => {
         });
       });
   });
-  
-  it.todo("Should return error if genre doesn't exist");
+  test("Should return error if there isn't books with that genre", () => {
+    return request
+      .get("/book/genre")
+      .query({ genre: "Comedy" })
+      .set("authorization", "Bearer " + token)
+      .then((res) => {
+        expect(res.statusCode).toEqual(400);
+        expect(res.body.error).toEqual(
+          "Hasn't been found books with genre Comedy"
+        );
+      });
+  });
   it.todo("Should return the number of books by genre");
 
   afterAll(async () => {
