@@ -6,10 +6,13 @@ userController.getById = async (req, res) => {
   const { id } = req.params;
   try {
     const user = await userService.findById(id);
+    if (!user) {
+      return res.status(400).json({ error: "Invalid Id!" });
+    }
     return res.json(user);
   } catch (error) {
     console.log(error);
-    return res.status(400).json({ error: "Invalid Id!" });
+    return res.status(500).json({ error: "An internal error ocurred!" });
   }
 };
 

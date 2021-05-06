@@ -14,6 +14,9 @@ const UserSchema = new Schema({
     type: String,
     required: true,
   },
+  books: {
+    type: [{ type: Schema.Types.ObjectId, ref: "book" }],
+  },
   createdAt: {
     type: Date,
     required: true,
@@ -22,4 +25,4 @@ const UserSchema = new Schema({
 });
 const User = db.model("user", UserSchema);
 
-export { User };
+export default User;

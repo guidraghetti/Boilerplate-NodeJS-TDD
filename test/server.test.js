@@ -185,6 +185,15 @@ describe("Test protected routes", () => {
         expect(res.body.error).toEqual("Unauthorized!");
       });
   });
+  test("Shoud return error with invalid id", () => {
+    return request
+      .get(`/user/aaaaaaaaaaaaaaaaaaaaaaaa`)
+      .set("authorization", "Bearer " + token)
+      .then((res) => {
+        expect(res.statusCode).toEqual(400);
+        expect(res.body.error).toEqual("Invalid Id!");
+      });
+  });
   test("Shoud return specific user with token", () => {
     return request
       .get(`/user/${userId}`)
@@ -196,27 +205,57 @@ describe("Test protected routes", () => {
         expect(res.body).toHaveProperty("email");
       });
   });
-  test("Shoud return error with invalid id", () => {
+});
+
+describe("All tests about books", () => {
+  test("Should user add a book that he own to his profile", () => {
+    const book = {
+      userId,
+      name: "Harry Potter",
+      genre: "Fiction",
+      type: "own",
+      year: 2001,
+    };
     return request
-      .get(`/user/${userId}dkfdjlfdjsfdlfsd`)
+      .post(`/book/post`)
+      .send(book)
+      .set("authorization", "Bearer " + token)
+      .then((res) => {
+        expect(res.statusCode).toEqual(200);
+        expect(res.body.books.length).toBeGreaterThan(0);
+      });
+  });
+  test("Should return all books owned by some user", () => {
+    return request
+      .get(`/book/${userId}/own`)
+      .set("authorization", "Bearer " + token)
+      .then((res) => {
+        expect(res.statusCode).toEqual(200);
+        expect(res.body.userId).toEqual(userId);
+        res.body.books.forEach((book) => {
+          expect(book).toHaveProperty("name");
+          expect(book).toHaveProperty("year");
+          expect(book).toHaveProperty("genre");
+          // expect(book).toHaveProperty("cover");
+        });
+      });
+  });
+  test("Should return error if user doesn't exist", () => {
+    return request
+      .get(`/book/aaaaaaaaaaaaaaaaaaaaaaaa/own`)
       .set("authorization", "Bearer " + token)
       .then((res) => {
         expect(res.statusCode).toEqual(400);
-        expect(res.body.error).toEqual("Invalid Id!");
+        expect(res.body.error).toEqual("User not found!");
       });
   });
+  it.todo("Should return all books that some user like to buy");
+  it.todo("Should return error user if user id is incorrect");
+  it.todo("Should return all books by genre");
+  it.todo("Should return error if genre doesn't exist");
+  it.todo("Should return the number of books by genre");
 
-  describe("All tests about books", () => {
-    it.todo("Should return all books owned by some user");
-    it.todo("Should return all books that some user like to buy");
-    it.todo("Should return error user if user id is incorrect");
-    it.todo("Should return all books by genre");
-    it.todo("Should return error if genre doesn't exist");
-    it.todo("Should return the number of books by genre");
-    it.todo("Should user add a book that he own to his profile");
-    it.todo("Should user add a book that he like to buy to his profile");
-  });
-
+  it.todo("Should user add a book that he like to buy to his profile");
   afterAll(async () => {
     await db.connection.db.dropDatabase();
     await db.connection.close(false);
