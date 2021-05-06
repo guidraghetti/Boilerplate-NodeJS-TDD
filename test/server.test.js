@@ -329,7 +329,28 @@ describe("All tests about books", () => {
         );
       });
   });
-  it.todo("Should return the number of books by genre");
+  test("Should return the number of books by genre", () => {
+    return request
+      .get("/book/genre/count")
+      .query({ genre: "Fiction" })
+      .set("authorization", "Bearer " + token)
+      .then((res) => {
+        expect(res.statusCode).toEqual(200);
+        expect(res.body.count).toBeGreaterThan(0);
+      });
+  });
+  test("Should return error if the number of books by genre is 0", () => {
+    return request
+      .get("/book/genre/count")
+      .query({ genre: "Comedy" })
+      .set("authorization", "Bearer " + token)
+      .then((res) => {
+        expect(res.statusCode).toEqual(400);
+        expect(res.body.error).toEqual(
+          "Hasn't been found books with genre Comedy"
+        );
+      });
+  });
 
   afterAll(async () => {
     await db.connection.db.dropDatabase();

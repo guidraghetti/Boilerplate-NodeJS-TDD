@@ -13,6 +13,22 @@ bookController.getAllBooks = async (req, res) => {
   }
 };
 
+bookController.getCountByGenre = async (req, res) => {
+  const { genre } = req.query;
+  try {
+    const books = await bookService.findBookByGenre(genre);
+    if (!books.length > 0) {
+      return res
+        .status(400)
+        .json({ error: `Hasn't been found books with genre ${genre}` });
+    }
+    return res.json({ count: books.length });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ error: "An internal error ocurred!" });
+  }
+};
+
 bookController.getBooksByGenre = async (req, res) => {
   const { genre } = req.query;
   try {
