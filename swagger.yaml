@@ -498,7 +498,7 @@ definitions:
         type: "array"
         items:
           type: "string"
-        description: "all books that user have or like to"
+          description: "all books that user have or like to"
 
 externalDocs:
   description: "Find out more about Swagger"
