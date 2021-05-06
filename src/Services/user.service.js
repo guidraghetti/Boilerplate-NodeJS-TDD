@@ -23,7 +23,7 @@ userService.updateUser = async (userId, book) => {
 };
 
 userService.findByEmail = async (email) => User.findOne({ email });
-userService.findById = async (id) => User.findById(id, " _id name email");
+userService.findById = async (id) => User.findById(id, " _id name email books");
 userService.findAllUsers = async () => User.find({}, "_id name email books");
 userService.findBooks = async (id, typeBook) => {
   const { name, email, books } = await User.findOne({ _id: id }).populate({

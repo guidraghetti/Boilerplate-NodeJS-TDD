@@ -14,7 +14,7 @@ tags:
 - name: "Book"
   description: "Operations about books"
 schemes:
-- "https"
+# - "https"
 - "http"
 
 securityDefinitions:
@@ -319,7 +319,45 @@ paths:
             properties:
               error:
                 type: "string"
-  # /book
+  /book:
+    post:
+      tags:
+      - "Book"
+      summary: "Post a book "
+      description: "Post a book in your profile and seed book database"
+      operationId: "postBook"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Book object need to be added"
+        required: true
+        schema:
+          $ref: "#/definitions/PostBook"
+      responses:
+        "400":
+          description: "Bad Request"
+          schema:
+            type: "object"
+            properties:
+              error:
+                type: "string"
+                
+        "401":
+          description: "Unauthorized"
+          schema:
+            type: "object"
+            properties:
+              error:
+                type: "string"
+        "200":
+          description: "Successful Operation"
+          schema:
+            $ref: "#/definitions/PostBookResponse"
+      
   
 
 definitions:
@@ -385,10 +423,7 @@ definitions:
         items:
           type: "string"
         description: "all books that user have or like to"
-      createdAt:
-        type: "string"
-        format: "date-time"
-        description: "Date of creation"
+      
   Book:
     type: "object"
     properties:
@@ -424,6 +459,47 @@ definitions:
         type: "array"
         items:
           $ref: "#/definitions/Book"
+  PostBook:
+    type: "object"
+    properties:
+      userId:
+        type: "string"
+        description: "Id of user that book will be added"
+      name:
+        type: "string"
+        description: "name of book that will be added"
+      ISBN:
+        type: "string"
+        description: "ISBN of book that will be added"
+      genre:
+        type: "string"
+        description: "Genre of book that will be added"
+      type:
+        type: "string"
+        enum: ["own", "like"]
+        description: "If user own book or if he likes to own it"
+      year: 
+        type: "integer"
+        description: "Year of release that book"
+      
+  PostBookResponse:
+    type: "object"
+    properties:
+      id:
+        type: "string"
+        description: "Id of user that posted a book"
+      name:
+        type: "string"
+        description: "Name of user that posted a book"
+      email:
+        type: "string"
+        description: "Email of user that posted a book"
+      books:
+        type: "array"
+        items:
+          type: "string"
+        description: "all books that user have or like to"
+
 externalDocs:
   description: "Find out more about Swagger"
   url: "http://swagger.io"
