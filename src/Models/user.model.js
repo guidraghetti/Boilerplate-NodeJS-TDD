@@ -1,4 +1,4 @@
-import { mongoose as db } from "../database/db.js";
+import { db } from "../database/db.js";
 const Schema = db.Schema;
 
 const UserSchema = new Schema({

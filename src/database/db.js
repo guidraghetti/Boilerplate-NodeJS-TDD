@@ -12,22 +12,22 @@ const {
   NODE_ENV,
 } = process.env;
 
-const url = `mongodb://${MONGO_HOST}:${27017}/${MONGO_DATABASE}?retryWrites=true&w=majority`;
+const url = `mongodb://${MONGO_HOST}:${MONGO_PORT}/${
+  NODE_ENV === "test" ? MONGO_DATABASE_TEST : MONGO_DATABASE
+}?retryWrites=true&w=majority`;
 
-const options = {
+const dbOptions = {
   useNewUrlParser: true,
   useUnifiedTopology: true,
   useFindAndModify: false,
 };
 
-const db = () => {
-  mongoose.connect(url, options, (err, good) => {
-    if (err) {
-      console.log(err);
-    } else {
-      NODE_ENV === "test" ? "" : console.log("Database is connected!");
-    }
-  });
-};
+mongoose.connect(url, dbOptions, (err, good) => {
+  if (err) {
+    console.log(err);
+  } else {
+    NODE_ENV === "test" ? "" : console.log("Database is connected!");
+  }
+});
 
-export { db, mongoose };
+export { mongoose as db, dbOptions, url };
