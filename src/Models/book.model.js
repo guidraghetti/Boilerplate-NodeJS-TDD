@@ -1,4 +1,4 @@
-import { db } from "../database/db.js";
+import { mongoose as db } from "../database/db.js";
 const Schema = db.Schema;
 
 const bookSchema = new Schema({

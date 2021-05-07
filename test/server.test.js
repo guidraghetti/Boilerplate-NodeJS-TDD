@@ -1,7 +1,8 @@
 import supertest from "supertest";
 import { config } from "dotenv";
 import app from "../src/app";
-import { db, dbConfig } from "../src/database/db";
+import { mongooseConfig } from "../src/database/mongoose";
+import mongoose from 'mongoose';
 config();
 
 const request = supertest(app);
@@ -20,17 +21,17 @@ describe("Test Connections", () => {
     });
   });
   test("Should connect to database", (done) => {
-    db.connect(process.env.MONGO_URI_TEST, dbConfig, (error, result) => {
+    mongoose.connect(process.env.MONGO_URI_TEST, mongooseConfig, (error, result) => {
       if (error) {
         done(error);
         return;
       }
-      expect(result.connections[0].name).toEqual(process.env.DB_NAME_TEST);
+      expect(result.connections[0].name).toEqual(process.env.MONGO_DATABASE_TEST);
       done();
     });
   });
   test("Should disconnect database", (done) => {
-    db.connection.close(false, (error, result) => {
+    mongoose.connection.close(false, (error, result) => {
       if (error) {
         done(error);
         return;
@@ -53,7 +54,7 @@ describe("User registration", () => {
     password: " ",
   };
   beforeAll(async () => {
-    await db.connect(process.env.MONGO_URI_TEST, dbConfig);
+    await mongoose.connect(process.env.MONGO_URI_TEST, mongooseConfig);
   });
 
   test("Should register an user", () => {
@@ -353,7 +354,7 @@ describe("All tests about books", () => {
   });
 
   afterAll(async () => {
-    await db.connection.db.dropDatabase();
-    await db.connection.close(false);
+    await mongoose.connection.mongoose.dropDatabase();
+    await mongoose.connection.close(false);
   });
 });

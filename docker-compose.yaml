@@ -1,0 +1,28 @@
+version: "3"
+
+services:
+  # Container para persistência de dados (MongoDB) #
+  mongo-db:
+    container_name: mongo-db
+    image: mongo:4.4.4 # https://hub.docker.com/_/mongo
+    restart: unless-stopped
+    ports:
+      - 27017:27017
+    deploy:
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: 500M
+  book-api:
+    container_name: book-api
+    build:
+      context: .
+    ports:
+      - 3001:3001
+    environment:
+      MONGO_HOST: mongo-db
+    deploy:
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: 500M
