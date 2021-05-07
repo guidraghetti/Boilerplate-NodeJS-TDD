@@ -9,7 +9,7 @@ on:
     branches: [main]
 
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
 
     strategy:
@@ -33,4 +33,18 @@ jobs:
       - run: npm test
         env:
           CI: true
-    #- run: npm run build --if-present
+
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        name: Build docker stack
+    
+        run: docker-compose up -d
+
+      - uses: jakejarvis/wait-action@master
+        with:
+        time: '60s'
+      - name: Check running containers
+        run: docker ps -a
+
