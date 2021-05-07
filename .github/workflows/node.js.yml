@@ -37,7 +37,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v1
         name: Build docker stack
       - uses: jakejarvis/wait-action@master
         name: Check running containers
