@@ -43,7 +43,7 @@ jobs:
         name: Check running containers
         with:
           time: '60s'
-      - run: docker-compose up -d'
       
+      - run: docker-compose up -d'
       - run: docker ps -a
 
