@@ -40,11 +40,10 @@ jobs:
     steps:
       - uses: actions/checkout@v1
         name: Build docker stack
+      - run: docker-compose up -d
       - uses: jakejarvis/wait-action@master
         name: Check running containers
         with:
           time: '60s'
-      
-      - run: docker-compose up -d
       - run: docker ps -a
 
