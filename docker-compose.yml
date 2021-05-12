@@ -6,8 +6,9 @@ services:
     container_name: mongo-db
     image: mongo:4.4.4 # https://hub.docker.com/_/mongo
     restart: unless-stopped
+    command: mongod --port 27018
     ports:
-      - 27017:27017
+      - 27018:27018
     deploy:
       resources:
         limits:
@@ -18,7 +19,7 @@ services:
     build:
       context: .
     ports:
-      - 3001:3001
+      - 80:80
     environment:
       MONGO_HOST: mongo-db
     deploy:

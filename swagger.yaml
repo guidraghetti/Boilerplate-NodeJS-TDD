@@ -6,7 +6,7 @@ info:
   license:
     name: "Apache 2.0"
     url: "http://www.apache.org/licenses/LICENSE-2.0.html"
-host: "localhost:3001"
+host: "localhost"
 basePath: "/"
 tags:
 - name: "User"
@@ -83,7 +83,7 @@ paths:
         schema:
           $ref: "#/definitions/Register"
       responses:
-        "200":
+        "201":
           description: "Successful Operation"
           schema:
             $ref: "#/definitions/RegisterResponse"
@@ -142,10 +142,10 @@ paths:
       produces:
       - "application/json"
       parameters:
-      - name: userId
+      - name: Id
         type: "string"
         in: path
-        description: ID of user that will be returned
+        description: Insert a valid user ID here
         required: true
       responses:
         "200":
@@ -180,10 +180,10 @@ paths:
       produces:
       - "application/json"
       parameters:
-      - name: genre
+      - name: Genre
         type: "string"
         in: query
-        description: Genre that will pass to return the count
+        description: Insert a book genre here
         required: true
       responses:
         "200":
@@ -222,10 +222,10 @@ paths:
       produces:
       - "application/json"
       parameters:
-      - name: genre
+      - name: Genre
         type: "string"
         in: query
-        description: Genre that will pass to return the books
+        description: Insert a book genre here
         required: true
       responses:
         "200":

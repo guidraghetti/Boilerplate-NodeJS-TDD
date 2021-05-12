@@ -5,8 +5,6 @@ name: Node.js CI
 on:
   push:
     branches: [main]
-  pull_request:
-    branches: [main]
 
 jobs:
   test:
@@ -40,7 +38,7 @@ jobs:
     steps:
       - uses: actions/checkout@v1
         name: Build docker stack
-      - run: docker-compose up -d
+      - run: docker build -t book-api
       - uses: jakejarvis/wait-action@master
         name: Check running containers
         with:
