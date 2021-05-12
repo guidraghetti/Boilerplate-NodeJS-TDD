@@ -18,7 +18,7 @@ services:
     build:
       context: .
     ports:
-      - 80:80
+      - 3001:3001
     environment:
       MONGO_HOST: mongo-db
     deploy:
