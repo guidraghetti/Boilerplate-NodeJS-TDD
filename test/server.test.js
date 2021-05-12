@@ -47,7 +47,7 @@ describe("Test Connections", () => {
   });
   test("Should render Swagger", () => {
     return request.get("/").then((res) => {
-      expect(res.statusCode).toEqual(301);
+      expect(res.statusCode).toEqual(200);
     });
   });
 });
