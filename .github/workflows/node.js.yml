@@ -38,7 +38,7 @@ jobs:
     steps:
       - uses: actions/checkout@v1
         name: Build docker stack
-      - run: docker build -t book-api
+      - run: docker build -t book-api .
       - uses: jakejarvis/wait-action@master
         name: Check running containers
         with:
