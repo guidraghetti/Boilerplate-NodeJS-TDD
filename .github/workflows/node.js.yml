@@ -47,5 +47,5 @@ jobs:
         run: docker-compose build -tag book-api . 
       - name: Docker Push
         run: |
-          docker tag book-api:latest
+          docker tag book-api:latest ${{secrets.DOCKER_USER}}/book-api:latest
           docker push ${{secrets.DOCKER_USER}}/book-api:latest
