@@ -46,4 +46,4 @@ jobs:
       - name: Build docker stack
         run: docker-compose build --tag guigox98/boilerplate-node-tdd:1.0.0
       - name: Docker Push
-        run: docker push ${{secrets.DOCKER_USER}}/boilerplate-node-tdd:1.0.0
+        run: docker push ${{secrets.DOCKER_USER}}/boilerplate
