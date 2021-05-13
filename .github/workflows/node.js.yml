@@ -44,6 +44,6 @@ jobs:
         run: |
           docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
       - name: Build docker stack
-        run: docker build -t book-api . --tag buildDocker/node-test:{date +%s}
+        run: docker-compose build -t book-api .
       - name: Docker Push
         run: docker push $DOCKER_USER/Boilerplate-Node-TDD
