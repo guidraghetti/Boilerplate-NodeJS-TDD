@@ -46,4 +46,4 @@ jobs:
       - name: Build docker stack
         run: docker-compose build -t book-api .
       - name: Docker Push
-        run: docker push $DOCKER_USER/boilerplate-node-tdd
+        run: docker push $DOCKER_USER/boilerplate-node-tdd:tagname
