@@ -44,8 +44,8 @@ jobs:
         run: |
           docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
       - name: Build docker stack
-        run: docker-compose build -tag book-api . 
+        run: docker-compose build -t book-api . 
       - name: Docker Push
         run: |
-          docker tag book-api:latest ${{secrets.DOCKER_USER}}/boilerplate-node-tdd:latest
-          docker push ${{secrets.DOCKER_USER}}/boilerplate-node-tdd:latest
+          docker tag book-api:latest ${{secrets.DOCKER_USER}}/book-api:latest
+          docker push ${{secrets.DOCKER_USER}}/book-api:latest
