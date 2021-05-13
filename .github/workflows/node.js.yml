@@ -36,12 +36,14 @@ jobs:
     needs: test
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v1
-        name: Build docker stack
-      - run: docker build -t book-api .
-      - uses: jakejarvis/wait-action@master
-        name: Check running containers
-        with:
-          time: '60s'
-      - run: docker ps -a
-
+      - uses: actions/checkout@v2
+      - name: Docker login
+        env:
+          DOCKER_USER: ${{secrets.DOCKER_USER}}
+          DOCKER_PASSWORD: ${{secrets.DOCKER_PASSWORD}}
+        run: |
+          docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
+      - name: Build docker stack
+        run: docker build -t book-api . --tag buildDocker/node-test:{date +%s}
+      - name: Docker Push
+        run: docker push $DOCKER_USER/Boilerplate-Node-TDD
