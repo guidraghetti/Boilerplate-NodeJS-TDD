@@ -47,10 +47,6 @@ jobs:
         run: | 
           docker build -t book-api . 
           docker tag book-api ${{secrets.DOCKER_USER}}/book-api
-  deploy:
-      needs: build
-      runs-on: ubuntu-latest
-      steps:
       - uses: actions/checkout@v2
       - name: Docker Push
         run: docker push ${{secrets.DOCKER_USER}}/book-api
